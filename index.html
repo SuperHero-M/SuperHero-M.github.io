@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>super_M</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="super_M">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="super_M">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:author" content="马琦添">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="super_M" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">super_M</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="搜索"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-爬虫" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2021/01/10/%E7%88%AC%E8%99%AB/" class="article-date">
+  <time datetime="2021-01-09T16:00:00.000Z" itemprop="datePublished">2021-01-10</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python%E8%BF%9B%E9%98%B6/">Python进阶</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/01/10/%E7%88%AC%E8%99%AB/">爬虫</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="爬虫"><a href="#爬虫" class="headerlink" title="爬虫"></a>爬虫</h1><h2 id="抓取页面"><a href="#抓取页面" class="headerlink" title="抓取页面"></a>抓取页面</h2><p>requests / aiohttp / httpx (抓取页面较为简单，所以就不细讲，只列出方法，不会可自行搜索学习，简单易上手)</p>
+<h2 id="解析页面"><a href="#解析页面" class="headerlink" title="解析页面"></a>解析页面</h2><h3 id="正则表达式-—-gt-re"><a href="#正则表达式-—-gt-re" class="headerlink" title="正则表达式 —&gt;re"></a>正则表达式 —&gt;re</h3><p>首先需要导入re和requests模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import re</span><br><span class="line">import requests</span><br></pre></td></tr></table></figure>
+
+<p>使用requests.get(‘网址’) ——向网站发送get请求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">resp &#x3D; requests.get(</span><br><span class="line">    url&#x3D;&#39;https:&#x2F;&#x2F;www.sohu.com&#39;,</span><br><span class="line">    headers&#x3D;&#123;</span><br><span class="line">        &#39;User-Agent&#39;: &#39;Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;87.0.4280.88 Safari&#x2F;537.36&#39;</span><br><span class="line">    &#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>注意（如果无法请求成功可添加User-Agent和cookie以增大请求数据成功的概率）</p>
+<p>cookie可在网页中鼠标右键检查选择network，然后刷新网页之后点击刷新项查看headers，就可以获取cookie值</p>
+<p>请求成功之后就可使用正则表达式进行匹配标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 使用正则表达式捕获组从页面代码中提取电影名称</span><br><span class="line">patten &#x3D; re.compile(r&#39;\&lt;span class&#x3D;&quot;title&quot;\&gt;(.*?)\&lt;\&#x2F;span\&gt;&#39;)</span><br><span class="line">print(patten.findall(resp.text))</span><br></pre></td></tr></table></figure>
+
+<p>注意：\为取消符号特殊意义，(.*?)为抓取目标</p>
+<p>抓取成功之后保存到文件夹或者数据库即可</p>
+<h3 id="css选择器-—-gt-beautifulsoup4"><a href="#css选择器-—-gt-beautifulsoup4" class="headerlink" title="css选择器 —&gt;beautifulsoup4"></a>css选择器 —&gt;beautifulsoup4</h3><p>想要使用css选择器首先得安装第三方库</p>
+<p>在pycharm的terminal中输入pip install beautifulsoup4回车即可，显示安装成功后就可使用该第三方库</p>
+<p>导入bs4模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import bs4</span><br></pre></td></tr></table></figure>
+
+<p>向网站发送请求一般选取requests，参考上面即可</p>
+<p>请求成功之后，去找到网页的代码（网站中鼠标右键检查），根据代码的标签寻找自己想要爬取内容的标签</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">soup &#x3D; bs4.BeautifulSoup(resp.text, &#39;html.parser&#39;)</span><br><span class="line">spans &#x3D; soup.select(&#39;ul.li&gt;div5&gt;a&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>这里写的(‘ul.li&gt;div5&gt;a’)意思是ul标签下的li子标签，li标签下的第五个div下的a标签</p>
+<p>抓取成功保存即可</p>
+<h3 id="xpath-—-gt-从XML文件中获取元素的查询语法-—-gt-lxml"><a href="#xpath-—-gt-从XML文件中获取元素的查询语法-—-gt-lxml" class="headerlink" title="xpath —&gt;从XML文件中获取元素的查询语法 —&gt; lxml"></a>xpath —&gt;从XML文件中获取元素的查询语法 —&gt; lxml</h3><p>使用xpath想要安装第三方库lxml</p>
+<p>terminal终端输入pip install lxml，显示安装成功后就可使用该第三方库</p>
+<p>导入lxml</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from lxml import etree</span><br></pre></td></tr></table></figure>
+
+<p>使用requests向网站发送请求，成功后</p>
+<p>去网站找到html代码，选中自己要获取的内容，鼠标右键，找到copy，找到copy xpath点击</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root &#x3D; etree.HTML(resp.text)</span><br><span class="line">spans &#x3D; root.xpath(&#39;&#x2F;&#x2F;*[@id&#x3D;&quot;content&quot;]&#x2F;div&#x2F;div[1]&#x2F;ol&#x2F;li&#x2F;div&#x2F;div[2]&#x2F;div[1]&#x2F;a&#x2F;span[1]&#39;)</span><br></pre></td></tr></table></figure>
+
+<p>注意：粘贴的xpth格式只有当前选中的一行数据，可根据自己需要的数据对代码进行修改，即可拿到想要的代码</p>
+<p>例如去掉div[2]中的[2]</p>
+<p>拿到数据下载保存即可</p>
+<h2 id="保存数据（数据持久化）"><a href="#保存数据（数据持久化）" class="headerlink" title="保存数据（数据持久化）"></a>保存数据（数据持久化）</h2><p>上面讲了如何爬取数据，这里将会告诉大家如何保存数据</p>
+<h3 id="Execl"><a href="#Execl" class="headerlink" title="Execl"></a>Execl</h3><p>该库是保存到表格中</p>
+<p>安装第三方库 pip install xlwt openpyxl</p>
+<p>导入模块xlwt</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import xlwt</span><br></pre></td></tr></table></figure>
+
+<p>下面给到家参考一份我写的完整的保存数据到Excel中的代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">def main():</span><br><span class="line">    # 创建工作簿</span><br><span class="line">    wb &#x3D; xlwt.Workbook()</span><br><span class="line">    # 创建工作表</span><br><span class="line">    sheet &#x3D; wb.add_sheet(&#39;Top250&#39;)</span><br><span class="line">    col_names &#x3D; (&#39;排名&#39;, &#39;名称&#39;, &#39;评分&#39;, &#39;类型&#39;, &#39;制片国家&#39;, &#39;语言&#39;, &#39;时长&#39;)</span><br><span class="line">    for index, name in enumerate(col_names):</span><br><span class="line">        sheet.write(0, index, name)</span><br><span class="line">        rank &#x3D; 0</span><br><span class="line">    for page in range(10):</span><br><span class="line">        resp &#x3D; requests.get(</span><br><span class="line">            url&#x3D;f&#39;https:&#x2F;&#x2F;movie.douban.com&#x2F;top250?start&#x3D;&#123;page * 25&#125;&#39;,</span><br><span class="line">            headers&#x3D;&#123;</span><br><span class="line">                &#39;User-Agent&#39;: &#39;Mozilla&#x2F;5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;87.0.4280.88 Safari&#x2F;537.36&#39;</span><br><span class="line">            &#125;</span><br><span class="line">        )</span><br><span class="line">        soup &#x3D; bs4.BeautifulSoup(resp.text, &#39;html.parser&#39;)</span><br><span class="line">        info_divs &#x3D; soup.select(&#39;div.info&#39;)</span><br><span class="line">        for info_div in info_divs:</span><br><span class="line">            rank +&#x3D; 1</span><br><span class="line">            anchor &#x3D; info_div.select_one(&#39;div.hd&gt;a&#39;)</span><br><span class="line">            detail_url &#x3D; anchor.attrs[&#39;href&#39;]</span><br><span class="line">            title &#x3D; anchor.select_one(&#39;span.title&#39;).text</span><br><span class="line">            score &#x3D; info_div.select_one(&#39;div.bd&gt;div.star&gt;span.rating_num&#39;).text</span><br><span class="line">            movie_details &#x3D; [rank, title, score]</span><br><span class="line">            movie_details +&#x3D; fetch_movie_detail(detail_url)</span><br><span class="line">            for index, item in enumerate(movie_details):</span><br><span class="line">                sheet.write(rank, index, item)</span><br><span class="line">        wb.save(&#39;豆瓣电影.xls&#39;)</span><br><span class="line"></span><br><span class="line">    print(&#39;程序结束&#39;)</span><br><span class="line">    </span><br><span class="line">    </span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h3 id="CSV-—-gt-reader-writer-file"><a href="#CSV-—-gt-reader-writer-file" class="headerlink" title="CSV —&gt;reader / writer(file)"></a>CSV —&gt;reader / writer(file)</h3><p>CSV操作我给大家参考一份下载图片的代码，由于好理解，我就不详细给大家解释了，大家根据代码参考就可</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">resp &#x3D; requests.get(&#39;https:&#x2F;&#x2F;bkimg.cdn.bcebos.com&#x2F;pic&#x2F;562c11dfa9ec8a1363271293564a868fa0ec08fa6a24?x-bce-process&#x3D;image&#x2F;watermark,image_d2F0ZXIvYmFpa2UxMTY&#x3D;,g_7,xp_5,yp_5&#39;)</span><br><span class="line">with open(&#39;sanji.png&#39;, &#39;wb&#39;) as file:</span><br><span class="line">    file.write(resp.content)</span><br></pre></td></tr></table></figure>
+
+<p>也可将数据保存到数据库当中，这种方法一般企业使用更多，队友新手党来说，学会上面两种方法即可</p>
+<h3 id="数据库（Database）"><a href="#数据库（Database）" class="headerlink" title="数据库（Database）"></a>数据库（Database）</h3><p>关系型数据库（SQL）<br>库（NoSQL —&gt; NewSQL）</p>
+<h2 id="并发爬取"><a href="#并发爬取" class="headerlink" title="并发爬取"></a>并发爬取</h2><p>由于爬取方式是一个一个下载，可能速度会相对较慢，我们就可以使用多线程或者多进程爬取，也可使用线程池或者进程池</p>
+<h3 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h3><p>多线程是由一个进程中的多个线程组成，多个线程可以同时进行文件的下载，适用于下载文件之间没有先后顺序的下载</p>
+<p>多线程之间通信比较简单，因为线程可以共享进程的内容</p>
+<p>使用多线程需要导入模块Thread</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from threading import Thread</span><br></pre></td></tr></table></figure>
+
+<p>这里我用代码向大家演示多线程的使用方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">def record_time(func):</span><br><span class="line"></span><br><span class="line">    def wrapper(*args, **kwargs):</span><br><span class="line">        start &#x3D; time.time()</span><br><span class="line">        result &#x3D; func(*args, **kwargs)</span><br><span class="line">        end &#x3D; time.time()</span><br><span class="line">        print(f&#39;&#123;func.__name__&#125;执行时间:&#123;end - start:.3f&#125;秒&#39;)</span><br><span class="line">        return result</span><br><span class="line"></span><br><span class="line">    return wrapper</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@record_time</span><br><span class="line">def download(filename):</span><br><span class="line">    print(f&#39;开始下载&#123;filename&#125;&#39;)</span><br><span class="line">    time.sleep(random.randint(5, 10))</span><br><span class="line">    print(f&#39;&#123;filename&#125;下载完成&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@record_time</span><br><span class="line">def upload(filename):</span><br><span class="line">    print(f&#39;开始上传&#123;filename&#125;&#39;)</span><br><span class="line">    time.sleep(random.randint(5, 10))</span><br><span class="line">    print(f&#39;&#123;filename&#125;上传完成&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"># 如果程序里有好时间的任务，可能会阻塞别的任务，就用线程来执行，如果有因果关系就必须等着，按顺序执行，如果没有因果关系，就可以用线程</span><br><span class="line">@record_time</span><br><span class="line">def main():</span><br><span class="line">    t1 &#x3D; Thread(target&#x3D;download, args&#x3D;(&#39;Python从入门到住院.pdf&#39;, ))</span><br><span class="line">    t1.start()</span><br><span class="line">    t2 &#x3D; Thread(target&#x3D;download, args&#x3D;(&#39;MySQL从删库到跑路.avi&#39;, ))</span><br><span class="line">    t2.start()</span><br><span class="line">    t3 &#x3D; Thread(target&#x3D;upload, args&#x3D;(&#39;北京有点热.avi&#39;, ))</span><br><span class="line">    t3.start()</span><br><span class="line">    t1.join()</span><br><span class="line">    t2.join()</span><br><span class="line">    t3.join()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ &#x3D;&#x3D; &#39;__main__&#39;:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<p>注意：args后面为元组，所以需要在最后打逗号</p>
+<p>这里我使用了一个装饰器，用来装饰下面三个函数</p>
+<h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h3><p>使用线程池需要导入模块ThreadPoolExecutor</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from concurrent.futures.thread import ThreadPoolExecutor</span><br></pre></td></tr></table></figure>
+
+<p>使用方法我之间用代码向大家演示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">ef download_picture(picture_url):</span><br><span class="line">    resp &#x3D; requests.get(picture_url)</span><br><span class="line">    if resp.status_code &#x3D;&#x3D; 200:</span><br><span class="line">        filename &#x3D; picture_url[picture_url.rfind(&#39;&#x2F;&#39;) + 1:]</span><br><span class="line">        with open(f&#39;images&#x2F;&#123;filename&#125;&#39;, &#39;wb&#39;) as file:</span><br><span class="line">            file.write(resp.content)</span><br><span class="line">            </span><br><span class="line">            </span><br><span class="line">with ThreadPoolExecutor(max_workers&#x3D;16) as pool:</span><br><span class="line">    for num in range(1, 11):</span><br><span class="line">        resp &#x3D; requests.get(&#39;https:&#x2F;&#x2F;image.so.com&#x2F;zjl?ch&#x3D;beauty&amp;t1&#x3D;600&amp;sn&#x3D;30&#39;)</span><br><span class="line">        data_dict &#x3D; resp.json()</span><br><span class="line">        for beauty_dict in data_dict[&#39;list&#39;]:</span><br><span class="line">            picture_url &#x3D; beauty_dict[&#39;qhimg_url&#39;]</span><br><span class="line">            pool.submit(download_picture, picture_url)</span><br></pre></td></tr></table></figure>
+
+<h3 id="多线程和多进程"><a href="#多线程和多进程" class="headerlink" title="多线程和多进程"></a>多线程和多进程</h3><p>使用方法和多线程，线程池差不多</p>
+<p>将Tread替换为Process，ThreadPoolExecutor替换为ProcessPoolExecutor即可</p>
+<h3 id="异步编程"><a href="#异步编程" class="headerlink" title="异步编程"></a>异步编程</h3><p>异步不需要排队，没有顺序，不会阻塞，也不会等待</p>
+<p>需要模块aiohttp和asyncio</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">import aiohttp</span><br><span class="line">import asyncio</span><br></pre></td></tr></table></figure>
+
+<p>直接代码展示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">U_A &#x3D; &#39;Mozilla&#x2F;5.0 (Windows NT 10.0; Win64; x64) AppleWebKit&#x2F;537.36 (KHTML, like Gecko) Chrome&#x2F;87.0.4280.141 Safari&#x2F;537.36&#39;</span><br><span class="line"></span><br><span class="line">urls &#x3D; [</span><br><span class="line">    &#39;https:&#x2F;&#x2F;www.bilibili.com&#x2F;&#39;,</span><br><span class="line">    &#39;https:&#x2F;&#x2F;www.baidu.com&#x2F;&#39;,</span><br><span class="line">    &#39;https:&#x2F;&#x2F;www.sohu.com&#x2F;&#39;,</span><br><span class="line">    &#39;https:&#x2F;&#x2F;www.taobao.com&#x2F;&#39;,</span><br><span class="line">    &#39;https:&#x2F;&#x2F;www.jd.com&#x2F;&#39;,</span><br><span class="line">    &#39;https:&#x2F;&#x2F;www.qidian.com&#x2F;&#39;,</span><br><span class="line">    &#39;https:&#x2F;&#x2F;www.huya.com&#x2F;&#39;,</span><br><span class="line">    &#39;https:&#x2F;&#x2F;www.douyu.com&#x2F;&#39;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">title_pattern &#x3D; re.compile(r&#39;\&lt;title\&gt;(?P&lt;foo&gt;.*?)\&lt;\&#x2F;title\&gt;&#39;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">async def main(url):</span><br><span class="line">    async with aiohttp.ClientSession() as session:</span><br><span class="line">        async with session.get(url, headers&#x3D;&#123;&#39;User-Agent&#39;: U_A&#125;) as resp:</span><br><span class="line">            page_code &#x3D; await resp.text()</span><br><span class="line">            match &#x3D; title_pattern.search(page_code)</span><br><span class="line">            if match:</span><br><span class="line">                print(match.group(&#39;foo&#39;))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">cos_list &#x3D; [main(url) for url in urls]</span><br><span class="line">loop &#x3D; asyncio.get_event_loop()</span><br><span class="line">loop.run_until_complete(asyncio.wait(cos_list))</span><br><span class="line">loop.close()</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2021/01/10/%E7%88%AC%E8%99%AB/" data-id="ckk7xyzon000593qg413i3srp" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/11/13/hello-world/" class="article-date">
+  <time datetime="2020-11-13T07:55:06.980Z" itemprop="datePublished">2020-11-13</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/13/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/11/13/hello-world/" data-id="ckk7xyzom000493qg1v5zhjxn" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Python参考书籍" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/09/01/Python%E5%8F%82%E8%80%83%E4%B9%A6%E7%B1%8D/" class="article-date">
+  <time datetime="2020-08-31T16:00:00.000Z" itemprop="datePublished">2020-09-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python%E5%9F%BA%E7%A1%80/">Python基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/01/Python%E5%8F%82%E8%80%83%E4%B9%A6%E7%B1%8D/">Python参考书籍</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Python参考书籍"><a href="#Python参考书籍" class="headerlink" title="Python参考书籍"></a>Python参考书籍</h2><h3 id="入门读物"><a href="#入门读物" class="headerlink" title="入门读物"></a>入门读物</h3><ol>
+<li>《Python基础教程》（<em>Beginning Python From Novice to Professional</em>）</li>
+<li>《Python学习手册》（<em>Learning Python</em>）</li>
+<li>《Python编程》（<em>Programming Python</em>）</li>
+<li>《Python Cookbook》</li>
+<li>《Python程序设计》（<em>Python Programming: An Introduction to Computer Science</em>）</li>
+<li>《Modern Python Cookbook》</li>
+</ol>
+<h3 id="进阶读物"><a href="#进阶读物" class="headerlink" title="进阶读物"></a>进阶读物</h3><ol>
+<li>《Python核心编程》（<em>Core Python Applications Programming</em>）</li>
+<li>《流畅的Python》（<em>Fluent Python</em>）</li>
+<li>《Effective Python：编写高质量Python代码的59个有效方法》（<em>Effective Python 59 Specific Ways to Write Better Python</em>）</li>
+<li>《Python设计模式》（<em>Learning Python Design Patterns</em>）</li>
+<li>《Python高级编程》（<em>Expert Python Programming</em>）</li>
+<li>《Python性能分析与优化》（<em>Mastering Python High Performance</em>）</li>
+</ol>
+<h3 id="Web框架"><a href="#Web框架" class="headerlink" title="Web框架"></a>Web框架</h3><ol>
+<li>《Django基础教程》（<em>Tango with Django</em>）</li>
+<li>《轻量级Django》（<em>Lightweight Django</em>）</li>
+<li>《Python Web开发：测试驱动方法》（<em>Test-Driven Development with Python</em>）</li>
+<li>《Web Development with Django Cookbook》</li>
+<li>《Test-Driven Development with Django》</li>
+<li>《Django Project Blueprints 》</li>
+<li>《Flask Web开发：基于Python的Web应用开发实战》（<em>Flask Web Development: Developing Web Applications with Python</em>）</li>
+<li>《深入理解Flask》（<em>Mastering Flask</em>）</li>
+</ol>
+<h3 id="爬虫开发"><a href="#爬虫开发" class="headerlink" title="爬虫开发"></a>爬虫开发</h3><ol>
+<li>《用Python写网络爬虫》（<em>Web Scraping with Python</em>）</li>
+<li>《精通Python爬虫框架Scrapy》（<em>Learning Scrapy</em>）</li>
+<li>《Python网络数据采集》（<em>Web Scraping with Python</em>）</li>
+<li>《Python爬虫开发与项目实战》</li>
+<li>《Python 3网络爬虫开发实战》</li>
+</ol>
+<h3 id="数据分析"><a href="#数据分析" class="headerlink" title="数据分析"></a>数据分析</h3><ol>
+<li>《利用Python进行数据分析》（<em>Python for Data Analysis</em>）</li>
+<li>《Python数据科学手册》（<em>Python Data Science Handbook</em>）</li>
+<li>《Python金融大数据分析》（<em>Python for Finance</em>）</li>
+<li>《Python数据可视化编程实战》（<em>Python Data Visualization Cookbook</em>）</li>
+<li>《Python数据处理》（<em>Data Wrangling with Python</em>）</li>
+</ol>
+<h3 id="机器学习"><a href="#机器学习" class="headerlink" title="机器学习"></a>机器学习</h3><ol>
+<li>《Python机器学习基础教程》（<em>Introduction to Machine Learning with Python</em>）</li>
+<li>《Python机器学习实践指南》（<em>Python Machine Learning Blueprints</em>）</li>
+<li>《Python Machine Learning Case Studies》</li>
+<li>《Python机器学习实践：测试驱动的开发方法》（<em>Thoughtful Machine Learning with Python A Test Driven Approach</em>）</li>
+<li>《Python机器学习经典实例》（<em>Python Machine Learning Cookbook</em>）</li>
+<li>《TensorFlow：实战Google深度学习框架》</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/09/01/Python%E5%8F%82%E8%80%83%E4%B9%A6%E7%B1%8D/" data-id="ckk7xyzoi000193qg867r70sv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Python之禅的最佳翻译" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/01/Python%E4%B9%8B%E7%A6%85%E7%9A%84%E6%9C%80%E4%BD%B3%E7%BF%BB%E8%AF%91/" class="article-date">
+  <time datetime="2020-07-31T16:00:00.000Z" itemprop="datePublished">2020-08-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python%E5%9F%BA%E7%A1%80/">Python基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/01/Python%E4%B9%8B%E7%A6%85%E7%9A%84%E6%9C%80%E4%BD%B3%E7%BF%BB%E8%AF%91/">Python之禅</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Zen-of-Python（Python之禅）"><a href="#Zen-of-Python（Python之禅）" class="headerlink" title="Zen of Python（Python之禅）"></a>Zen of Python（Python之禅）</h2><p>Beautiful is better than ugly. （优美比丑陋好）<br>Explicit is better than implicit.（清晰比晦涩好）<br>Simple is better than complex.（简单比复杂好）<br>Complex is better than complicated.（复杂比错综复杂好）<br>Flat is better than nested.（扁平比嵌套好）<br>Sparse is better than dense.（稀疏比密集好）<br>Readability counts.（可读性很重要）<br>Special cases aren’t special enough to break the rules.（特殊情况也不应该违反这些规则）<br>Although practicality beats purity.（但现实往往并不那么完美）<br>Errors should never pass silently.（异常不应该被静默处理）<br>Unless explicitly silenced.（除非你希望如此）<br>In the face of ambiguity, refuse the temptation to guess.（遇到模棱两可的地方，不要胡乱猜测）<br>There should be one– and preferably only one –obvious way to do it.（肯定有一种通常也是唯一一种最佳的解决方案）<br>Although that way may not be obvious at first unless you’re Dutch.（虽然这种方案并不是显而易见的，因为你不是那个荷兰人^这里指的是Python之父Guido^）<br>Now is better than never.（现在开始做比不做好）<br>Although never is often better than *right* now.（不做比盲目去做好^极限编程中的YAGNI原则^）<br>If the implementation is hard to explain, it’s a bad idea.（如果一个实现方案难于理解，它就不是一个好的方案）<br>If the implementation is easy to explain, it may be a good idea.（如果一个实现方案易于理解，它很有可能是一个好的方案）<br>Namespaces are one honking great idea – let’s do more of those!（命名空间非常有用，我们应当多加利用）</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/08/01/Python%E4%B9%8B%E7%A6%85%E7%9A%84%E6%9C%80%E4%BD%B3%E7%BF%BB%E8%AF%91/" data-id="ckk7xyzod000093qgb3fcayze" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-Python编程惯例" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/08/01/Python%E7%BC%96%E7%A8%8B%E6%83%AF%E4%BE%8B/" class="article-date">
+  <time datetime="2019-07-31T16:00:00.000Z" itemprop="datePublished">2019-08-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Python%E5%9F%BA%E7%A1%80/">Python基础</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/08/01/Python%E7%BC%96%E7%A8%8B%E6%83%AF%E4%BE%8B/">Python编程惯例</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Python编程惯例"><a href="#Python编程惯例" class="headerlink" title="Python编程惯例"></a>Python编程惯例</h2><p>“惯例”这个词指的是“习惯的做法，常规的办法，一贯的做法”，与这个词对应的英文单词叫“idiom”。由于Python跟其他很多编程语言在语法和使用上还是有比较显著的差别，因此作为一个Python开发者如果不能掌握这些惯例，就无法写出“Pythonic”的代码。下面我们总结了一些在Python开发中的惯用的代码。</p>
+<ol>
+<li><p>让代码既可以被导入又可以被执行。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ol>
+<ol start="2">
+<li><p>用下面的方式判断逻辑“真”或“假”。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> x:</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> x:</span><br></pre></td></tr></table></figure>
+
+<p><strong>好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&#x27;jackfrued&#x27;</span></span><br><span class="line">fruits = [<span class="string">&#x27;apple&#x27;</span>, <span class="string">&#x27;orange&#x27;</span>, <span class="string">&#x27;grape&#x27;</span>]</span><br><span class="line">owners = &#123;<span class="string">&#x27;1001&#x27;</span>: <span class="string">&#x27;骆昊&#x27;</span>, <span class="string">&#x27;1002&#x27;</span>: <span class="string">&#x27;王大锤&#x27;</span>&#125;</span><br><span class="line"><span class="keyword">if</span> name <span class="keyword">and</span> fruits <span class="keyword">and</span> owners:</span><br><span class="line">    print(<span class="string">&#x27;I love fruits!&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>不好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&#x27;jackfrued&#x27;</span></span><br><span class="line">fruits = [<span class="string">&#x27;apple&#x27;</span>, <span class="string">&#x27;orange&#x27;</span>, <span class="string">&#x27;grape&#x27;</span>]</span><br><span class="line">owners = &#123;<span class="string">&#x27;1001&#x27;</span>: <span class="string">&#x27;骆昊&#x27;</span>, <span class="string">&#x27;1002&#x27;</span>: <span class="string">&#x27;王大锤&#x27;</span>&#125;</span><br><span class="line"><span class="keyword">if</span> name != <span class="string">&#x27;&#x27;</span> <span class="keyword">and</span> <span class="built_in">len</span>(fruits) &gt; <span class="number">0</span> <span class="keyword">and</span> owners != &#123;&#125;:</span><br><span class="line">    print(<span class="string">&#x27;I love fruits!&#x27;</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>善于使用in运算符。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> x <span class="keyword">in</span> items: <span class="comment"># 包含</span></span><br><span class="line"><span class="keyword">for</span> x <span class="keyword">in</span> items: <span class="comment"># 迭代</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&#x27;Hao LUO&#x27;</span></span><br><span class="line"><span class="keyword">if</span> <span class="string">&#x27;L&#x27;</span> <span class="keyword">in</span> name:</span><br><span class="line">    print(<span class="string">&#x27;The name has an L in it.&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>不好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">name = <span class="string">&#x27;Hao LUO&#x27;</span></span><br><span class="line"><span class="keyword">if</span> name.find(<span class="string">&#x27;L&#x27;</span>) != <span class="number">-1</span>:</span><br><span class="line">    print(<span class="string">&#x27;This name has an L in it!&#x27;</span>)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>不使用临时变量交换两个值。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a, b = b, a</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用序列构建字符串。</p>
+<p><strong>好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chars = [<span class="string">&#x27;j&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;k&#x27;</span>, <span class="string">&#x27;f&#x27;</span>, <span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;u&#x27;</span>, <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;d&#x27;</span>]</span><br><span class="line">name = <span class="string">&#x27;&#x27;</span>.join(chars)</span><br><span class="line">print(name)  <span class="comment"># jackfrued</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>不好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chars = [<span class="string">&#x27;j&#x27;</span>, <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;c&#x27;</span>, <span class="string">&#x27;k&#x27;</span>, <span class="string">&#x27;f&#x27;</span>, <span class="string">&#x27;r&#x27;</span>, <span class="string">&#x27;u&#x27;</span>, <span class="string">&#x27;e&#x27;</span>, <span class="string">&#x27;d&#x27;</span>]</span><br><span class="line">name = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="keyword">for</span> char <span class="keyword">in</span> chars:</span><br><span class="line">    name += char</span><br><span class="line">print(name)  <span class="comment"># jackfrued</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>EAFP优于LBYL。</p>
+<p>EAFP - <strong>E</strong>asier to <strong>A</strong>sk <strong>F</strong>orgiveness than <strong>P</strong>ermission.</p>
+<p>LBYL - <strong>L</strong>ook <strong>B</strong>efore <strong>Y</strong>ou <strong>L</strong>eap.</p>
+<p><strong>好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">d = &#123;<span class="string">&#x27;x&#x27;</span>: <span class="string">&#x27;5&#x27;</span>&#125;</span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    value = <span class="built_in">int</span>(d[<span class="string">&#x27;x&#x27;</span>])</span><br><span class="line">    print(value)</span><br><span class="line"><span class="keyword">except</span> (KeyError, TypeError, ValueError):</span><br><span class="line">    value = <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>不好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">d = &#123;<span class="string">&#x27;x&#x27;</span>: <span class="string">&#x27;5&#x27;</span>&#125;</span><br><span class="line"><span class="keyword">if</span> <span class="string">&#x27;x&#x27;</span> <span class="keyword">in</span> d <span class="keyword">and</span> <span class="built_in">isinstance</span>(d[<span class="string">&#x27;x&#x27;</span>], <span class="built_in">str</span>) \</span><br><span class="line">		<span class="keyword">and</span> d[<span class="string">&#x27;x&#x27;</span>].isdigit():</span><br><span class="line">    value = <span class="built_in">int</span>(d[<span class="string">&#x27;x&#x27;</span>])</span><br><span class="line">    print(value)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    value = <span class="literal">None</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用enumerate进行迭代。</p>
+<p><strong>好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fruits = [<span class="string">&#x27;orange&#x27;</span>, <span class="string">&#x27;grape&#x27;</span>, <span class="string">&#x27;pitaya&#x27;</span>, <span class="string">&#x27;blueberry&#x27;</span>]</span><br><span class="line"><span class="keyword">for</span> index, fruit <span class="keyword">in</span> <span class="built_in">enumerate</span>(fruits):</span><br><span class="line">	print(index, <span class="string">&#x27;:&#x27;</span>, fruit)</span><br></pre></td></tr></table></figure>
+
+<p><strong>不好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">fruits = [<span class="string">&#x27;orange&#x27;</span>, <span class="string">&#x27;grape&#x27;</span>, <span class="string">&#x27;pitaya&#x27;</span>, <span class="string">&#x27;blueberry&#x27;</span>]</span><br><span class="line">index = <span class="number">0</span></span><br><span class="line"><span class="keyword">for</span> fruit <span class="keyword">in</span> fruits:</span><br><span class="line">    print(index, <span class="string">&#x27;:&#x27;</span>, fruit)</span><br><span class="line">    index += <span class="number">1</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用生成式生成列表。</p>
+<p><strong>好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data = [<span class="number">7</span>, <span class="number">20</span>, <span class="number">3</span>, <span class="number">15</span>, <span class="number">11</span>]</span><br><span class="line">result = [num * <span class="number">3</span> <span class="keyword">for</span> num <span class="keyword">in</span> data <span class="keyword">if</span> num &gt; <span class="number">10</span>]</span><br><span class="line">print(result)  <span class="comment"># [60, 45, 33]</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>不好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data = [<span class="number">7</span>, <span class="number">20</span>, <span class="number">3</span>, <span class="number">15</span>, <span class="number">11</span>]</span><br><span class="line">result = []</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> data:</span><br><span class="line">    <span class="keyword">if</span> i &gt; <span class="number">10</span>:</span><br><span class="line">        result.append(i * <span class="number">3</span>)</span><br><span class="line">print(result)  <span class="comment"># [60, 45, 33]</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用zip组合键和值来创建字典。</p>
+<p><strong>好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">keys = [<span class="string">&#x27;1001&#x27;</span>, <span class="string">&#x27;1002&#x27;</span>, <span class="string">&#x27;1003&#x27;</span>]</span><br><span class="line">values = [<span class="string">&#x27;骆昊&#x27;</span>, <span class="string">&#x27;王大锤&#x27;</span>, <span class="string">&#x27;白元芳&#x27;</span>]</span><br><span class="line">d = <span class="built_in">dict</span>(<span class="built_in">zip</span>(keys, values))</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure>
+
+<p><strong>不好</strong>的代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">keys = [<span class="string">&#x27;1001&#x27;</span>, <span class="string">&#x27;1002&#x27;</span>, <span class="string">&#x27;1003&#x27;</span>]</span><br><span class="line">values = [<span class="string">&#x27;骆昊&#x27;</span>, <span class="string">&#x27;王大锤&#x27;</span>, <span class="string">&#x27;白元芳&#x27;</span>]</span><br><span class="line">d = &#123;&#125;</span><br><span class="line"><span class="keyword">for</span> i, key <span class="keyword">in</span> <span class="built_in">enumerate</span>(keys):</span><br><span class="line">    d[key] = values[i]</span><br><span class="line">print(d)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<blockquote>
+<p><strong>说明</strong>：这篇文章的内容来自于网络，有兴趣的读者可以阅读<a target="_blank" rel="noopener" href="http://safehammad.com/downloads/python-idioms-2014-01-16.pdf">原文</a>。</p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2019/08/01/Python%E7%BC%96%E7%A8%8B%E6%83%AF%E4%BE%8B/" data-id="ckk7xyzol000393qgbynm6wm8" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Python%E5%9F%BA%E7%A1%80/">Python基础</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/Python%E8%BF%9B%E9%98%B6/">Python进阶</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/01/">一月 2021</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/09/">九月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">八月 2020</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/08/">八月 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/01/10/%E7%88%AC%E8%99%AB/">爬虫</a>
+          </li>
+        
+          <li>
+            <a href="/2020/11/13/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/09/01/Python%E5%8F%82%E8%80%83%E4%B9%A6%E7%B1%8D/">Python参考书籍</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/01/Python%E4%B9%8B%E7%A6%85%E7%9A%84%E6%9C%80%E4%BD%B3%E7%BF%BB%E8%AF%91/">Python之禅</a>
+          </li>
+        
+          <li>
+            <a href="/2019/08/01/Python%E7%BC%96%E7%A8%8B%E6%83%AF%E4%BE%8B/">Python编程惯例</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 马琦添<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
